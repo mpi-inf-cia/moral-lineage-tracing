@@ -372,7 +372,11 @@ Solution solver_ilp(ProblemGraph const& problemGraph, double costTermination = .
 
                 // iterate over all node pairs
 
-                std::cout << "frame " << t << ": |V|=" << data_.problemGraph.numberOfNodesInFrame(t) << std::endl;
+                std::cout
+                    << "frame " << t
+                    << ": |V|=" << data_.problemGraph.numberOfNodesInFrame(t)
+                    << ", counter=" << counter
+                    << std::endl;
 
                 #pragma omp parallel for firstprivate(path, buffer, visited)
                 for (size_t i = 0; i < data_.problemGraph.numberOfNodesInFrame(t); ++i)
