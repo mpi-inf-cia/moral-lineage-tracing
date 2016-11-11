@@ -371,6 +371,10 @@ Solution solver_ilp(ProblemGraph const& problemGraph, double costTermination = .
                 // }
 
                 // iterate over all node pairs
+
+                std::cout << "frame " << t << ": |V|=" << data_.problemGraph.numberOfNodesInFrame(t) << std::endl;
+
+                #pragma omp parallel for firstprivate(path, buffer, visited)
                 for (size_t i = 0; i < data_.problemGraph.numberOfNodesInFrame(t); ++i)
                     for (size_t j = 0; j < data_.problemGraph.numberOfNodesInFrame(t); ++j)
                     {
@@ -471,10 +475,11 @@ Solution solver_ilp(ProblemGraph const& problemGraph, double costTermination = .
                             // }
 
                             // sz - path.size() + 1 = cut capacity
+                            #pragma omp critical
                             this->addLazyConstraint(variables_.begin(), variables_.begin() + sz, coefficients_.begin(), 1 - (sz - static_cast<ptrdiff_t>(path.size()) + 1), std::numeric_limits<double>::infinity());
 
+                            #pragma omp atomic
                             ++counter;
-                            
                         }
                     }
             }
