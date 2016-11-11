@@ -87,24 +87,40 @@ Solution solver_ilp(ProblemGraph const& problemGraph, double costTermination = .
             std::cout << ' ' << nSpacetimeCycle << std::flush;
             stream << ' ' << nSpacetimeCycle;
 
-            auto nMorality = separateAndAddMoralityConstraints();
-            std::cout << ' ' << nMorality << std::flush;
-            stream << ' ' << nMorality;
+            size_t nMorality = 0;
+            if(nSpaceCycle + nSpacetimeCycle < 10000) { // ??? hack
+                auto nMorality = separateAndAddMoralityConstraints();
+                std::cout << ' ' << nMorality << std::flush;
+                stream << ' ' << nMorality;
+            }
+            else {
+                std::cout << " -" << std::flush;
+            }
 
             size_t nTermination = 0;
             if (data_.costTermination > 0.0)
             {
-                nTermination = separateAndAddTerminationConstraints();
-                std::cout << ' ' << nTermination << std::flush;
-                stream << ' ' << nTermination;
+                if(nSpaceCycle + nSpacetimeCycle < 10000) { // ??? hack
+                    nTermination = separateAndAddTerminationConstraints();
+                    std::cout << ' ' << nTermination << std::flush;
+                    stream << ' ' << nTermination;
+                }
+                else {
+                    std::cout << " -" << std::flush;
+                }
             }
 
             size_t nBirth = 0;
             if (data_.costBirth > 0.0)
             {
-                nBirth = separateAndAddBirthConstraints();
-                std::cout << ' ' << nBirth << std::flush;
-                stream << ' ' << nBirth;
+                if(nSpaceCycle + nSpacetimeCycle < 10000) { // ??? hack
+                    nBirth = separateAndAddBirthConstraints();
+                    std::cout << ' ' << nBirth << std::flush;
+                    stream << ' ' << nBirth;
+                }
+                else {
+                    std::cout << " -" << std::flush;
+                }
             }
 
             auto n = nSpaceCycle + nSpacetimeCycle + nMorality + nTermination + nBirth;
@@ -112,7 +128,7 @@ Solution solver_ilp(ProblemGraph const& problemGraph, double costTermination = .
             if (data_.enforceBifurcationConstraint)
             {
                 // if (n == 0)
-                    nBifurcation = separateAndAddBifurcationConstraints();
+                nBifurcation = separateAndAddBifurcationConstraints();
                 std::cout << ' ' << nBifurcation << std::flush;
                 stream << ' ' << nBifurcation;
             }
